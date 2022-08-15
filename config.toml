@@ -1,0 +1,83 @@
+baseURL = "https://ec2spotworkshops.com/"
+languageCode = "en-us"
+title = "EKS Finhack Workshops"
+theme = "learn"
+uglyurls = true
+sectionPagesMenu = "main"
+pygmentsCodeFences = true
+
+[blackfriday]
+hrefTargetBlank = true
+
+[params]
+themeVariant = "mine"
+showVisitedLinks = true
+description = "EKS Finhack Workshops"
+disableSearch = false
+disableAssetsBusting = false
+disableLanguageSwitchingButton = false
+disableShortcutsTitle = false
+disableInlineCopyToClipBoard = true
+disableLandingPageButton = true
+
+[outputs]
+home = [ "HTML", "AMP", "RSS", "JSON"]
+page = [ "HTML", "AMP"]
+
+# All privacy options enabled. There should not be
+# any cookies or privacy
+[privacy]
+  [privacy.disqus]
+    disable = false
+  [privacy.googleAnalytics]
+    anonymizeIP = true
+    disable = true
+    respectDoNotTrack = true
+    useSessionStorage = false
+  [privacy.instagram]
+    disable = true
+    simple = false
+  [privacy.twitter]
+    disable = true
+    enableDNT = false
+    simple = false
+  [privacy.vimeo]
+    disable = true
+    simple = false
+  [privacy.youtube]
+    disable = false
+    # This is required to avoid cookies on youtube integration
+    privacyEnhanced = true
+
+
+[[menu.shortcuts]]
+name = "<i class='fas fa-external-link-alt'></i> EKS Workshops"
+url = "https://eksworkshop.com"
+weight = 10
+
+
+[[menu.shortcuts]]
+name = "<i class='fas fa-envelope'></i> Feedback / Questions?"
+url = "mailto:palavas@amazon.com"
+weight = 40
+
+
+[languages]
+  [languages.en]
+    languageName = "English"
+    weight = 1
+
+
+[markup]
+  [markup.highlight]
+    anchorLineNos = false
+    codeFences = true
+    guessSyntax = false
+    hl_Lines = ''
+    lineAnchors = ''
+    lineNoStart = 1
+    lineNos = false
+    lineNumbersInTable = true
+    noClasses = true
+    style = 'monokai'
+    tabWidth = 4
