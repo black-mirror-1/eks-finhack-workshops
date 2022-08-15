@@ -53,7 +53,42 @@ page = [ "HTML", "AMP"]
 [[menu.shortcuts]]
 name = "<i class='fas fa-external-link-alt'></i> EKS Workshops"
 url = "https://eksworkshop.com"
+weight = 2
+
+[[menu.shortcuts]]
+name = "<i class='fab fa-youtube'></i> Containers from the Couch"
+url = "https://containersfromthecouch.com"
+weight = 1
+
+[[menu.shortcuts]]
+name = "<i class='fas fa-chalkboard'></i> AppMesh Workshop"
+url = "https://appmeshworkshop.com"
+weight = 7
+
+[[menu.shortcuts]]
+name = "<i class='fas fa-chalkboard'></i> ECS Workshop"
+url = "https://ecsworkshop.com"
+weight = 8
+
+[[menu.shortcuts]]
+name = "<i class='fas fa-chalkboard'></i> EKS Networking Workshops"
+url = "https://awsk8snetworkshops.com"
+weight = 9
+
+[[menu.shortcuts]]
+name = "<i class='fas fa-chalkboard'></i> AWS Partner Workshops"
+url = "https://awsworkshop.io"
 weight = 10
+
+[[menu.shortcuts]]
+name = "<i class='fas fa-chalkboard'></i> EKS Anywhere"
+url = "https://anywhere.eks.amazonaws.com/docs/getting-started/"
+weight = 11
+
+[[menu.shortcuts]]
+name = "<i class='fas fa-bookmark'></i> More Resources"
+url = "/more_resources"
+weight = 15
 
 
 [[menu.shortcuts]]
