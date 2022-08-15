@@ -1,7 +1,7 @@
 ---
 title: "Console Credentials"
 date: 2018-08-07T13:36:57-07:00
-weight: 33
+weight: 34
 ---
 
 This step is optional, as nearly all of the workshop content is CLI-driven. But, if you'd like full access to your workshop cluster in the EKS console this step is recommended.

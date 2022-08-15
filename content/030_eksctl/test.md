@@ -1,7 +1,7 @@
 ---
 title: "Test the Cluster"
 date: 2018-08-07T13:36:57-07:00
-weight: 32
+weight: 33
 ---
 #### Test the cluster:
 Confirm your nodes:
