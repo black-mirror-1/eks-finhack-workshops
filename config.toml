@@ -1,4 +1,4 @@
-baseURL = "https://ec2spotworkshops.com/"
+baseURL = "https://main.d4mf9mspcwuqg.amplifyapp.com/"
 languageCode = "en-us"
 title = "EKS Finhack Workshops"
 theme = "learn"
