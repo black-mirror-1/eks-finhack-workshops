@@ -1,17 +1,20 @@
 ---
-title: "Amazon EKS Workshop"
+title: "Amazon EKS Finhack Workshop"
 chapter: true
 weight: 1
 ---
 
-{{% notice note %}}
-For even more container related content, check out our new show:
-[Containers from the Couch](https://containersfromthecouch.com) 
-{{% /notice %}}
+# EKS Finhack Workshops
 
-<div style="text-align: center"><h2>Amazon EKS Workshop</h2></div>
+Welcome to the Amazon EKS Finhack Workshop!
 
-![EKS](images/3-service-animated.gif)
+## Introduction
+In the current economic climate, customers are looking for ways to optimize their AWS spend, whihc included containers as well.  The purpose of the Finhack for Containers is to introduce series of labs that enables customers to understand what levers they have to optimize their compute and operational costs tied to their container infrastructure. 
 
-In this workshop, we will explore multiple ways to configure VPC, ALB, and EC2
-Kubernetes workers, and Amazon Elastic Kubernetes Service.
+The workshop will focus on enabling customers with best practices in the following key areas:
+
+* Cost Visibility: Understanding costs with container infrastructure (Cluster costs, workload costs, tenant costs, etc.)
+* Compute Optimization: Optimizing compute costs with Savings Plans, Spot, Graviton, etc.
+* Application Profiling:  Understanding workload and resource allocation
+* Autoscaling:  Improving compute utilization with elasticity (pod and cluster autoscaling)
+
