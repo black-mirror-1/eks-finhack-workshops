@@ -1,7 +1,7 @@
 ---
 title: "Monte Carlo Pi Template"
 date: 2018-08-07T08:30:11-07:00
-weight: 61
+weight: 36
 ---
 
 ## Monte Carlo Pi Template
@@ -30,7 +30,7 @@ metadata:
   labels: 
     app: monte-carlo-pi-service 
 spec: 
-  replicas: 2 
+  replicas: 10 
   selector: 
     matchLabels: 
       app: monte-carlo-pi-service 
@@ -38,7 +38,7 @@ spec:
     metadata: 
       labels: 
         app: monte-carlo-pi-service 
-    spec: 
+    spec:
       containers: 
         - name: monte-carlo-pi-service 
           image: ruecarlo/monte-carlo-pi-service
@@ -69,11 +69,3 @@ The deployment does not include any toleration or affinities. If deployed as is,
 There are a few best practices for managing multi-tenant dynamic clusters. One of those best practices is adding [Admission Controllers](https://kubernetes.io/docs/reference/access-authn-authz/admission-controllers/) such as the [ResourceQuota](https://kubernetes.io/docs/reference/access-authn-authz/admission-controllers/#resourcequota) and [LimitRanger](https://kubernetes.io/docs/reference/access-authn-authz/admission-controllers/#limitranger) admission controllers, both [supported by EKS](https://docs.aws.amazon.com/eks/latest/userguide/platform-versions.html)
 {{% /notice %}}
 
-
-Before we deploy our application and start scaling it, there are two requirements that we should apply and implement in the configuration file:
-
- 1. The first requirement is for the application to be deployed only on nodes that have been labeled with `intent: apps`
- 2. The second requirement is for the application to prefer Spot Instances over on-demand instances.
-
-
-In the next section we will explore how to implement this requirements.

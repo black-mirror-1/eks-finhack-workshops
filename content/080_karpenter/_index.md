@@ -2,7 +2,7 @@
 title: "Autoscaling with Karpenter"
 date: 2019-01-24T09:05:54Z
 weight: 80
-pre: "<b>3. </b>"
+pre: "<b>(Optional) 4. </b>"
 ---
 
 ## Running Efficient Kubernetes Clusters on Amazon EC2 with Karpenter

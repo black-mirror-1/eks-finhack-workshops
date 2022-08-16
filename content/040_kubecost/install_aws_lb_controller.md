@@ -48,7 +48,7 @@ Output
 We need to create an IAM policy and associate it with the IAM role that the AWS Load Balancer Controller service account uses. First download the policy JSON file.
 
 ```bash
-curl -o iam-policy.json https://raw.githubusercontent.com/kubernetes-sigs/aws-load-balancer-controller/v2.4.0/docs/install/iam_policy.json
+curl -o iam_policy.json https://raw.githubusercontent.com/kubernetes-sigs/aws-load-balancer-controller/v2.4.3/docs/install/iam_policy.json
 ```
 
 Output
@@ -60,7 +60,7 @@ Output
 Create the IAM policy based on the JSON file you have just downloaded.
 
 ```bash
-aws iam create-policy --policy-name AWSLoadBalancerControllerIAMPolicy  --policy-document file://iam-policy.json
+aws iam create-policy --policy-name AWSLoadBalancerControllerIAMPolicy  --policy-document file://iam_policy.json
 ```
 
 Output

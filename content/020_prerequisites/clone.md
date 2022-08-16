@@ -1,7 +1,9 @@
 ---
 title: "Clone the Service Repos"
 chapter: false
-weight: 23
+weight: 24
+disableToc: true
+hidden: true
 ---
 
 ```

@@ -13,8 +13,8 @@ In the current economic climate, customers are looking for ways to optimize thei
 
 The workshop will focus on enabling customers with best practices in the following key areas:
 
-* Cost Visibility: Understanding costs with container infrastructure (Cluster costs, workload costs, tenant costs, etc.)
-* Compute Optimization: Optimizing compute costs with Savings Plans, Spot, Graviton, etc.
-* Application Profiling:  Understanding workload and resource allocation
-* Autoscaling:  Improving compute utilization with elasticity (pod and cluster autoscaling)
+* **Cost Visibility**: Understanding costs with container infrastructure (Cluster costs, workload costs, tenant costs, etc.)
+* **Compute Optimization**: Optimizing compute costs with Savings Plans, Spot, Graviton, etc.
+* **Application Profiling**:  Understanding workload and resource allocation
+* **Autoscaling**:  Improving compute utilization with elasticity (pod and cluster autoscaling)
 

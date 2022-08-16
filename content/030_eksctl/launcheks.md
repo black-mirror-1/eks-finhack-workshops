@@ -50,12 +50,15 @@ metadata:
 
 availabilityZones: ["${AZS[0]}", "${AZS[1]}", "${AZS[2]}"]
 
+iam:
+  withOIDC: true
+
 managedNodeGroups:
-- name: nodegroup
-  desiredCapacity: 3
-  instanceType: t3.small
-  ssh:
-    enableSsm: true
+- name: mng-od-m5xlarge
+  desiredCapacity: 4
+  maxSize: 10
+  minSize: 0
+  instanceType: m5.xlarge
 
 # To enable all of the control plane logs, uncomment below:
 # cloudWatch:

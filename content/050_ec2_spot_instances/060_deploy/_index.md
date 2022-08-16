@@ -1,13 +1,15 @@
 ---
-title: "Deploy an example Microservice"
+title: "Modify example Microservice to deploy on Spot"
 chapter: true
 weight: 60
 ---
 
-# Deploy an example Microservice
+# Modify example Microservice to deploy on Spot
 
-To illustrate application scaling using [Horizontal Pod Autoscaler](https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/) (HPA) and cluster scaling using [Cluster Autoscaler](https://github.com/kubernetes/autoscaler/tree/master/cluster-autoscaler) (CA), we will deploy a microservice that generates CPU load.
+There are two requirements that we should apply and implement in the configuration file:
 
-The microservice we will use as an example, is a trivial web service that uses a [Monte Carlo method to approximate pi](https://en.wikipedia.org/wiki/Monte_Carlo_integration) written in go. You can find the application code in in [this github repo](https://github.com/ruecarlo/eks-workshop-sample-api-service-go)
+ 1. The first requirement is for the application to be deployed only on nodes that have been labeled with `intent: apps`
+ 2. The second requirement is for the application to prefer Spot Instances over on-demand instances.
 
-![Monte Carlo Pi Approximation](/images/using_ec2_spot_instances_with_eks/deploy/monte_carlo_pi.png)
+
+In the next section we will explore how to implement this requirements.

@@ -1,5 +1,5 @@
 ---
-title: "Using Spot Instances with EKS"
+title: "Cost visibility with Kubecost"
 menuTitle: "Cost visibility with Kubecost"
 weight: 40
 pre: "<b>1. </b>"
@@ -19,7 +19,7 @@ If workshop application is NOT installed yet, you have to complete Deploy Micros
 
 chapter before working on this chapter. This chapter works with the basic cluster setup and does not require larger nodegroup.
 
-    Verify if Git is installed
+Verify if Git is installed
 
 ```bash
 git --version
