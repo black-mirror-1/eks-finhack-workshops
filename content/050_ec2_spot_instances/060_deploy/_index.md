@@ -1,5 +1,5 @@
 ---
-title: "Modify example Microservice to deploy on Spot"
+title: "Deploy example Microservice to deploy on Spot"
 chapter: true
 weight: 60
 ---

@@ -1,11 +1,11 @@
 ---
-title: "Verify Kubecost"
+title: "Explore Kubecost"
 date: 2021-11-07T11:05:19-07:00
 weight: 44
 draft: false
 ---
 
-# Verify Kubecost setup
+### Get the URL for Kubecost
 
 As you could recollect from the previous step, lets take the URL address from below command:
 

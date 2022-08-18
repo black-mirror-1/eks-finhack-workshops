@@ -3,7 +3,7 @@ title: "Using Spot Instances with EKS"
 menuTitle: "Purchasing Option: EC2 Spot Instances"
 date: 2019-01-24T09:05:54Z
 weight: 50
-pre: "<b>2. </b>"
+pre: "<b>3. </b>"
 ---
 
 In this workshop, you will learn how to provision, manage, and maintain your Kubernetes 

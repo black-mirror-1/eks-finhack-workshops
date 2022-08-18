@@ -2,6 +2,7 @@
 title: "Install Helm"
 chapter: false
 weight: 23
+hidden: true
 ---
 
 

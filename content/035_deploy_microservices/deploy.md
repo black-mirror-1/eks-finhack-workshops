@@ -6,7 +6,8 @@ weight: 37
 
 To deploy the application we just need to run:
 ```
-kubectl apply -f ~/environment/monte-carlo-pi-service.yml 
+kubectl create namespace mcp-od-static
+kubectl apply -f ~/environment/mcp-od-static-service.yml 
 ```
 This should prompt:
 ```

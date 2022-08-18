@@ -3,6 +3,7 @@ title: "Multi-Architecture deployments"
 date: 2021-11-07T11:05:19-07:00
 weight: 88
 draft: false
+hidden: true
 ---
 
 In the previous section we defined two Provisioners, both supporting `amd64` (x86_64) and `arm64` architectures. In this section we will deploy applications that require a specific architecture. 

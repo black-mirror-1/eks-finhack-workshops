@@ -2,6 +2,7 @@
 title: "Create an AWS KMS Custom Managed Key (CMK)"
 chapter: false
 weight: 32
+hidden: true
 ---
 
 

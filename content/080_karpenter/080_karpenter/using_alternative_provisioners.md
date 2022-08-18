@@ -3,6 +3,7 @@ title: "Using Alternative Provisioners"
 date: 2021-11-07T11:05:19-07:00
 weight: 89
 draft: false
+hidden: true
 ---
 
 So far we have seen some advanced use cases of Karpenter. In this section we will see how Karpenter can define different Provisioners. This allows to handle different configurations. 

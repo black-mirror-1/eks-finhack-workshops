@@ -3,16 +3,12 @@ title: "Start the workshop..."
 pre: "<b>   </b>"
 chapter: true
 weight: 20
-pre: '<i class="fa fa-film" aria-hidden="true"></i> '
 tags:
   - beginner
 ---
 
 # Getting Started
 
-To start the workshop, follow one of the following depending on whether you are...
+To start the workshop, login to the AWS Workshop portal following the steps [here](/020_prerequisites/portal.html)
 
-* ...[running the workshop on your own (in your own account)](self_paced/), or
-* ...[attending an AWS hosted event (using AWS provided hashes)](aws_event/)
-
-Once you have completed with either setup, continue with [**Create a Workspace**](/020_prerequisites/workspace/)
+Once you are logged in to your AWS account, continue with [**Quick Setup**](/020_prerequisites/quick-setup.html)

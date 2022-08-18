@@ -69,12 +69,13 @@ If you are still struggling with the implementation, then run below command to o
 
 {{%expand "Show me how to apply all the changes and deploy the final solution" %}}
 ```
-cat <<EoF > ~/environment/monte-carlo-pi-service.yml
+cat <<EoF > ~/environment/mcp-spot-static-service.yml
 ---
 apiVersion: v1 
 kind: Service 
 metadata: 
-  name: monte-carlo-pi-service 
+  name: monte-carlo-pi-service
+  namespace: mcp-spot-static 
 spec: 
   type: LoadBalancer 
   ports: 
@@ -86,11 +87,12 @@ spec:
 apiVersion: apps/v1 
 kind: Deployment 
 metadata: 
-  name: monte-carlo-pi-service 
+  name: monte-carlo-pi-service
+  namespace: mcp-spot-static 
   labels: 
     app: monte-carlo-pi-service 
 spec: 
-  replicas: 2 
+  replicas: 6 
   selector: 
     matchLabels: 
       app: monte-carlo-pi-service 
@@ -103,7 +105,7 @@ spec:
       - key: "spotInstance" 
         operator: "Equal" 
         value: "true" 
-        effect: "PreferNoSchedule" 
+        effect: "NoSchedule" 
       affinity: 
         nodeAffinity: 
           preferredDuringSchedulingIgnoredDuringExecution: 
@@ -120,7 +122,7 @@ spec:
               - key: intent 
                 operator: In 
                 values: 
-                - apps 
+                - apps
       containers: 
         - name: monte-carlo-pi-service 
           image: ruecarlo/monte-carlo-pi-service
@@ -139,6 +141,5 @@ spec:
             - containerPort: 8080 
 
 EoF
-
 ```
 {{% /expand %}}

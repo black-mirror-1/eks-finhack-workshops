@@ -2,6 +2,7 @@
 title: "Build the Microservice"
 date: 2018-08-07T08:30:11-07:00
 weight: 91
+hidden: true
 ---
 
 In this section we will be building the application that used to scale our cluster. First, let's download all the assets that we will need to build the application and image. Run the following command. We will use git to download the project and bring all the files needed to build our Monte Carlo microservice application:

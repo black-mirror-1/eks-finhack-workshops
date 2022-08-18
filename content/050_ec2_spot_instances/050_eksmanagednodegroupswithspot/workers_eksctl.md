@@ -10,93 +10,41 @@ In this section we will deploy the instance types we selected in previous chapte
 Let's first create the configuration file:
 
 ```
-cat << EOF > add-mngs-spot.yaml
+cat << EOF > add-mng-spot.yml
 ---
 apiVersion: eksctl.io/v1alpha5
 kind: ClusterConfig
 
 managedNodeGroups:
-- name: mng-spot-4vcpu-16gb
-  amiFamily: AmazonLinux2
+- name: mng-spot-4vcpu-8gb
   desiredCapacity: 2
   minSize: 0
   maxSize: 4
   spot: true
   instanceTypes:
-  - m4.xlarge
-  - m5.xlarge
-  - m5a.xlarge
-  - m5ad.xlarge
-  - m5d.xlarge
-  - t2.xlarge
-  - t3.xlarge
-  - t3a.xlarge
-  iam:
-    withAddonPolicies:
-      autoScaler: true
-      cloudWatch: true
-      albIngress: true
-  privateNetworking: true
+  - c5.xlarge
+  - c5a.xlarge
+  - c5ad.xlarge
+  - c5d.xlarge
+  - c6a.xlarge
   taints:
     - key: spotInstance
       value: "true"
-      effect: PreferNoSchedule
+      effect: NoSchedule
   labels:
-    alpha.eksctl.io/cluster-name: eksworkshop-eksctl
-    alpha.eksctl.io/nodegroup-name: mng-spot-4vcpu-16gb
     intent: apps
-  tags:
-    alpha.eksctl.io/nodegroup-name: mng-spot-4vcpu-16gb
-    alpha.eksctl.io/nodegroup-type: managed
-    k8s.io/cluster-autoscaler/node-template/label/intent: apps
-    k8s.io/cluster-autoscaler/node-template/taint/spotInstance: "true:PreferNoSchedule"
-
-- name: mng-spot-8vcpu-32gb
-  amiFamily: AmazonLinux2
-  desiredCapacity: 1
-  minSize: 0
-  maxSize: 2
-  spot: true
-  instanceTypes:
-  - m4.2xlarge
-  - m5.2xlarge
-  - m5a.2xlarge
-  - m5ad.2xlarge
-  - m5d.2xlarge
-  - t2.2xlarge
-  - t3.2xlarge
-  - t3a.2xlarge
-  iam:
-    withAddonPolicies:
-      autoScaler: true
-      cloudWatch: true
-      albIngress: true
-  privateNetworking: true
-  taints:
-    - key: spotInstance
-      value: "true"
-      effect: PreferNoSchedule
-  labels:
-    alpha.eksctl.io/cluster-name: eksworkshop-eksctl
-    alpha.eksctl.io/nodegroup-name: mng-spot-8vcpu-32gb
-    intent: apps
-  tags:
-    alpha.eksctl.io/nodegroup-name: mng-spot-8vcpu-32gb
-    alpha.eksctl.io/nodegroup-type: managed
-    k8s.io/cluster-autoscaler/node-template/label/intent: apps
-    k8s.io/cluster-autoscaler/node-template/taint/spotInstance: "true:PreferNoSchedule"
 
 metadata:
-  name: eksworkshop-eksctl
+  name: ${EKSWORKSHOP_NAME}
   region: ${AWS_REGION}
-  version: "1.21"
+  version: "1.22"
 
 EOF
 ```
 Create new EKS managed node groups with Spot Instances. 
 
 ```
-eksctl create nodegroup --config-file=add-mngs-spot.yaml
+eksctl create nodegroup --config-file=add-mng-spot.yml
 ```
 {{% notice info %}}
 Creation of node groups will take 3-4 minutes. 
@@ -115,31 +63,12 @@ There are a few things to note in the configuration that we just used to create 
   * **alpha.eksctl.io/nodegroup-name**, to indicate the nodes belong to **mng-spot-4vcpu-16gb** or **mng-spot-8vcpu-32gb** node groups.
   * **intent**, to allow you to deploy stateless applications on nodes that have been labeled with value **apps**
 
- * Notice that the we added 2 cluster autoscaler related tags to node groups:  
-  * **k8s.io/cluster-autoscaler/node-template/label/intent** and **k8s.io/cluster-autoscaler/node-template/taint** are used by cluster autoscaler when node groups scale down to 0 (and scale up from 0). Cluster autoscaler acts on Auto Scaling groups belonging to node groups, therefore it requires same tags on ASG as well. Currently managed node groups do not auto propagate tags to ASG, see this [open issue](https://github.com/aws/containers-roadmap/issues/1524). Therefore, we will be adding these tags to ASG manually. 
-
 {{% notice note %}}
 Since eksctl 0.41, integrates with the instance selector ! This can create more convenient configurations that apply diversification of instances in a concise way.
 As an exercise, [read eks instance selector documentation](https://eksctl.io/usage/instance-selector/) and figure out which changes you may need to apply the configuration changes using instance selector.
 At the time of writing this workshop, we have not included this functionality as there is a pending feature we'd need to deny a few instances [Read more about this here](https://github.com/weaveworks/eksctl/issues/3718)
 {{% /notice %}}
 
-
-Let's add these tags to Auto Scaling groups of each node group using AWS cli.
-
-```
-ASG_4VCPU_16GB=$(eksctl get nodegroup -n mng-spot-4vcpu-16gb --cluster eksworkshop-eksctl -o json | jq -r '.[].AutoScalingGroupName')
-ASG_8VCPU_32GB=$(eksctl get nodegroup -n mng-spot-8vcpu-32gb --cluster eksworkshop-eksctl -o json | jq -r '.[].AutoScalingGroupName')
-
-aws autoscaling create-or-update-tags --tags \
-ResourceId=$ASG_4VCPU_16GB,ResourceType=auto-scaling-group,Key=k8s.io/cluster-autoscaler/node-template/label/intent,Value=apps,PropagateAtLaunch=true \
-ResourceId=$ASG_4VCPU_16GB,ResourceType=auto-scaling-group,Key=k8s.io/cluster-autoscaler/node-template/taint/spotInstance,Value="true:PreferNoSchedule",PropagateAtLaunch=true
-
-aws autoscaling create-or-update-tags --tags \
-ResourceId=$ASG_8VCPU_32GB,ResourceType=auto-scaling-group,Key=k8s.io/cluster-autoscaler/node-template/label/intent,Value=apps,PropagateAtLaunch=true \
-ResourceId=$ASG_8VCPU_32GB,ResourceType=auto-scaling-group,Key=k8s.io/cluster-autoscaler/node-template/taint/spotInstance,Value="true:PreferNoSchedule",PropagateAtLaunch=true
-  
-```
 
 {{% notice info %}}
 If you are wondering at this stage: *Where is spot bidding price ?* you are missing some of the changes EC2 Spot Instances had since 2017. Since November 2017 [EC2 Spot price changes infrequently](https://aws.amazon.com/blogs/compute/new-amazon-ec2-spot-pricing/) based on long term supply and demand of spare capacity in each pool independently. You can still set up a **maxPrice** in scenarios where you want to set maximum budget. By default *maxPrice* is set to the On-Demand price; Regardless of what the *maxPrice* value, Spot Instances will still be charged at the current Spot market price.

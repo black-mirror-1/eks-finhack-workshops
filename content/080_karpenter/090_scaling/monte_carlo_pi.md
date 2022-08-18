@@ -17,7 +17,8 @@ cat <<EoF > monte-carlo-pi-service.yaml
 apiVersion: v1 
 kind: Service 
 metadata: 
-  name: monte-carlo-pi-service 
+  name: monte-carlo-pi-service
+  namespace: mcp-spot-karpneter
 spec: 
   type: LoadBalancer 
   ports: 
@@ -29,7 +30,8 @@ spec:
 apiVersion: apps/v1 
 kind: Deployment 
 metadata: 
-  name: monte-carlo-pi-service 
+  name: monte-carlo-pi-service
+  namespace: mcp-spot-karpneter 
   labels: 
     app: monte-carlo-pi-service 
 spec: 
@@ -48,7 +50,7 @@ spec:
         karpenter.sh/capacity-type: spot
       containers: 
         - name: monte-carlo-pi-service 
-          image: ${MONTE_CARLO_IMAGE}
+          image: ruecarlo/monte-carlo-pi-service
           resources: 
             requests: 
               memory: "512Mi" 
@@ -63,6 +65,8 @@ spec:
           ports: 
             - containerPort: 8080 
 EoF
+
+kebctl create namespace mcp-spot-karpneter
 kubectl apply -f monte-carlo-pi-service.yaml
 ```
 
@@ -74,7 +78,7 @@ Let's understand what happens when applying this configuration.
 ## Challenge
 
 {{% notice tip %}}
-You can use **Kube-ops-view** or just plain **kubectl** cli to visualize the changes and answer the questions below. In the answers we will provide the CLI commands that will help you check the resposnes. Remember: to get the url of **kube-ops-view** you can run the following command `kubectl get svc kube-ops-view | tail -n 1 | awk '{ print "Kube-ops-view URL = http://"$4 }'`
+You can use **Kube-ops-view** or just plain **kubectl** cli to visualize the changes and answer the questions below. In the answers we will provide the CLI commands that will help you check the resposnes. Remember: to get the url of **kube-ops-view** you can run the following command `echo "Kube-ops-view URL: http://$(kubectl get ingress kube-ops-view-ingress -o  jsonpath="{.status.loadBalancer.ingress[0].hostname}")"`
 {{% /notice %}}
 
 Answer the following questions. You can expand each question to get a detailed answer and validate your understanding.
@@ -122,7 +126,7 @@ kubectl describe node $(kubectl get node --selector=intent=apps,karpenter.sh/cap
 So far we have not exposed any service outside the **kube-ops-view**. Similar to what we did with **kube-ops-view**. Once the application has been deployed we can use the following line to find out the external url to access the Monte Carlo Pi approximation service. To get the url of the service: 
 
 ```
-kubectl get svc monte-carlo-pi-service | tail -n 1 | awk '{ print "monte-carlo-pi-service URL = http://"$4 }'
+kubectl get svc monte-carlo-pi-service -n mcp-spot-karpenter | tail -n 1 | awk '{ print "monte-carlo-pi-service URL = http://"$4 }'
 ```
 
 {{% notice note %}}

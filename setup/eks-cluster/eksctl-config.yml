@@ -1,0 +1,56 @@
+apiVersion: eksctl.io/v1alpha5
+kind: ClusterConfig
+
+metadata:
+  name: {EKSCLUSTER_NAME}
+  region: {AWS_REGION}
+  version: "{EKS_VERSION}"
+  tags:
+    karpenter.sh/discovery: {EKSCLUSTER_NAME}
+    
+vpc:
+  clusterEndpoints:
+      publicAccess: true
+      privateAccess: true
+  cidr: "10.4.0.0/16"
+  
+availabilityZones: ["{AWS_REGION}a","{AWS_REGION}b","{AWS_REGION}c"]
+
+# IRSA setup
+iam:
+  withOIDC: true
+    
+managedNodeGroups:
+  - name: ops
+    instanceTypes: ["c5.xlarge"] 
+    desiredCapacity: 2
+    maxSize: 3
+    labels:
+      intent: control-apps
+  - name: mng-od-4vcpu-8gb
+    desiredCapacity: 2
+    minSize: 0
+    maxSize: 5
+    instanceType: c5.xlarge
+    taints:
+      - key: ondemandInstance
+        value: "true"
+        effect: NoSchedule
+    labels:
+      intent: apps
+      
+
+addons:
+  - name: vpc-cni
+    version: latest
+  - name: coredns
+    version: latest
+  - name: kube-proxy
+    version: latest
+  
+cloudWatch: 
+ clusterLogging:
+   enableTypes: ["*"]
+   
+
+# eksctl create iamidentitymapping --cluster eks-demo --arn arn:aws:iam::${AWS_REGION}:role/Admin --group system:masters --username ${EKSCLUSTER_NAME}-admin

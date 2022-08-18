@@ -3,6 +3,7 @@ title: "Expose Kubecost"
 date: 2021-11-07T11:05:19-07:00
 weight: 43
 draft: false
+hidden: true
 ---
 
 # Configure Ingress for Kubecost

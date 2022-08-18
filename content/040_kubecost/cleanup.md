@@ -3,6 +3,7 @@ title: "Cleanup"
 date: 2021-11-07T11:05:19-07:00
 weight: 45
 draft: false
+hidden: true
 ---
 
 # Cleanup

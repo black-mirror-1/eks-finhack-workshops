@@ -3,6 +3,7 @@ title: "Cleanup"
 date: 2021-08-07T08:30:11-07:00
 chapter: false
 weight: 100
+hidden: true
 ---
 
 {{% notice note %}}
