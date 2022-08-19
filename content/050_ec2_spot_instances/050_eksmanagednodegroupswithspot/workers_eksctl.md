@@ -35,7 +35,7 @@ managedNodeGroups:
     intent: apps
 
 metadata:
-  name: ${EKSWORKSHOP_NAME}
+  name: ${EKSCLUSTER_NAME}
   region: ${AWS_REGION}
   version: "1.22"
 
@@ -53,15 +53,10 @@ Creation of node groups will take 3-4 minutes.
 There are a few things to note in the configuration that we just used to create these node groups.
 
  * Node groups configurations are set under the **managedNodeGroups** section, this indicates that the node groups are managed by EKS.
- * First node group has **xlarge** (4 vCPU and 16 GB) instance types with **minSize** 0, **maxSize** 4 and **desiredCapacity** 2.
- * Second node group has **2xlarge** (8 vCPU and 32 GB) instance types with **minSize** 0, **maxSize** 2 and **desiredCapacity** 1.
+ * node group has **xlarge** (4 vCPU and 8 GB) instance types with **minSize** 0, **maxSize** 4 and **desiredCapacity** 2.
  * The configuration **spot: true** indicates that the node group being created is a EKS managed node group with Spot capacity.
  * We applied a **[Taint](https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/)** `spotInstance: "true:PreferNoSchedule"`. **PreferNoSchedule** is used to indicate we prefer pods not be scheduled on Spot Instances. This is a “preference” or “soft” version of **NoSchedule** – the system will try to avoid placing a pod that does not tolerate the taint on the node, but it is not required.
- * Notice that the we added 3 node labels per node:
-
-  * **alpha.eksctl.io/cluster-name**, to indicate the nodes belong to **eksworkshop-eksctl** cluster.
-  * **alpha.eksctl.io/nodegroup-name**, to indicate the nodes belong to **mng-spot-4vcpu-16gb** or **mng-spot-8vcpu-32gb** node groups.
-  * **intent**, to allow you to deploy stateless applications on nodes that have been labeled with value **apps**
+ * **intent**, to allow you to deploy stateless applications on nodes that have been labeled with value **apps**
 
 {{% notice note %}}
 Since eksctl 0.41, integrates with the instance selector ! This can create more convenient configurations that apply diversification of instances in a concise way.
@@ -96,10 +91,9 @@ kubectl get nodes \
 The output of this command should return nodes running on Spot Instances. The output of the command shows the **CAPACITYTYPE** for the current nodes is set to **SPOT**.
 
 ```
-NAME                                                 STATUS     ROLES    AGE   VERSION               CAPACITYTYPE
-ip-192-168-101-235.ap-southeast-1.compute.internal   Ready   <none>   14m   v1.21.4-eks-033ce7e   SPOT
-ip-192-168-130-210.ap-southeast-1.compute.internal   Ready   <none>   14m   v1.21.4-eks-033ce7e   SPOT
-ip-192-168-176-250.ap-southeast-1.compute.internal   Ready   <none>   14m   v1.21.4-eks-033ce7e   SPOT
+NAME                                        STATUS   ROLES    AGE     VERSION                CAPACITYTYPE
+ip-10-4-28-74.us-west-2.compute.internal    Ready    <none>   2m27s   v1.22.12-eks-ba74326   SPOT
+ip-10-4-35-132.us-west-2.compute.internal   Ready    <none>   2m26s   v1.22.12-eks-ba74326   SPOT
 ```
 
 Now we will show all nodes running on On Demand Instances. The output of the command shows the **CAPACITYTYPE** for the current nodes is set to **ON_DEMAND**.
@@ -110,7 +104,9 @@ kubectl get nodes \
   --selector=eks.amazonaws.com/capacityType=ON_DEMAND
 ```
 ```
-NAME                                                 STATUS   ROLES    AGE     VERSION               CAPACITYTYPE
-ip-192-168-165-163.ap-southeast-1.compute.internal   Ready    <none>   51m   v1.21.4-eks-033ce7e   ON_DEMAND
-ip-192-168-99-237.ap-southeast-1.compute.internal    Ready    <none>   51m   v1.21.4-eks-033ce7e   ON_DEMAND
+NAME                                        STATUS   ROLES    AGE   VERSION                CAPACITYTYPE
+ip-10-4-2-10.us-west-2.compute.internal     Ready    <none>   52m   v1.22.12-eks-ba74326   ON_DEMAND
+ip-10-4-61-151.us-west-2.compute.internal   Ready    <none>   52m   v1.22.12-eks-ba74326   ON_DEMAND
+ip-10-4-77-113.us-west-2.compute.internal   Ready    <none>   52m   v1.22.12-eks-ba74326   ON_DEMAND
+ip-10-4-91-227.us-west-2.compute.internal   Ready    <none>   52m   v1.22.12-eks-ba74326   ON_DEMAND
 ```

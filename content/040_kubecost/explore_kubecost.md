@@ -10,14 +10,13 @@ draft: false
 As you could recollect from the previous step, lets take the URL address from below command:
 
 ```bash
-kubectl get ingress -n kubecost
+kubectl get ingress kubecost-ingress -n kubecost | tail -n 1 | awk '{ print "kubecost URL = http://"$4 }'
 ```
 
 Output
 
 ```
-NAME               CLASS     HOSTS   ADDRESS                                                                  PORTS   AGE
-kubecost-ingress   aws-alb   *       k8s-kubecost-kubecost-ec071365c4-110569893.us-east-1.elb.amazonaws.com 
+kubecost URL = http://k8s-kubecost-kubecost-xxxxxx-xxxxxx.us-west-2.elb.amazonaws.com
 ```
 
 Copy the ADDRESS URL value that you see from your output. Open a browser and try this ADDRESS to reach the Kubecost dashboard.

@@ -6,27 +6,28 @@ weight: 63
 
 To deploy the application we just need to run:
 ```
-kubectl create namespace mcp-spot-static
-kubectl apply -f ~/environment/mcp-spot-static-service.yml
+kubectl create namespace mcp-spot-svc
+kubectl apply -f ~/environment/mcp-spot-svc.yml
 ```
 This should prompt:
 ```
-service/monte-carlo-pi-service created
-deployment.apps/monte-carlo-pi-service created
+service/mcp-spot-svc created
+deployment.apps/mcp-spot-svc created
+ingress.networking.k8s.io/mcp-spot-svc-ingress created
 ```
 
 ### Challenge: Checking the deployment
 
 Before we test our application, we should check our replicas are running on the right nodes.
 
-Your next task is to confirm the replicas of the **monte-carlo-pi-service** are running in the right nodes. You can use [Kubectl cheat sheet](https://kubernetes.io/docs/reference/kubectl/cheatsheet/#viewing-finding-resources) as a reference.
+Your next task is to confirm the replicas of the **mcp-spot-sv** are running in the right nodes. You can use [Kubectl cheat sheet](https://kubernetes.io/docs/reference/kubectl/cheatsheet/#viewing-finding-resources) as a reference.
 
 {{%expand "Show me a hint for implementing this." %}}
 
 Use the get node selector to confirm the nodes.
 ```
 nodes=$(kubectl get nodes --selector=intent=apps | tail -n +2 |  awk '{print $1}')
-for node in $nodes; do echo $node; kubectl describe nodes $node | grep "monte-carlo-pi-service"; done 
+for node in $nodes; do echo $node; kubectl describe nodes $node | grep "mcp-spot-sv"; done 
 ```
 {{% /expand %}}
 
@@ -35,7 +36,7 @@ for node in $nodes; do echo $node; kubectl describe nodes $node | grep "monte-ca
 
 Once the application has been deployed we can use the following line to find out the external url to access the Monte Carlo Pi approximation service. To get the url of the service: 
 ```
-kubectl get svc monte-carlo-pi-service -n mcp-spot-static | tail -n 1 | awk '{ print "monte-carlo-pi-service URL = http://"$4 }'
+kubectl get ingress mcp-spot-svc-ingress -n mcp-spot-svc | tail -n 1 | awk '{ print "mcp-spot-svc URL = http://"$4 }'
 ```
 
 {{% notice note %}}
@@ -54,6 +55,6 @@ monte carlo process, this can be useful to increase the CPU demand on each reque
 
 You can also execute a request with the additional parameter from the console:
 ```
-URL=$(kubectl get svc monte-carlo-pi-service -n mcp-spot-static | tail -n 1 | awk '{ print $4 }')
+URL=$(kubectl get ingress mcp-spot-svc-ingress -n mcp-spot-svc | tail -n 1 | awk '{ print $4 }')
 time curl ${URL}/?iterations=100000000
 ```

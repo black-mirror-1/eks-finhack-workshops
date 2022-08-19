@@ -27,6 +27,10 @@ metadata:
 spec:
   labels:
     intent: apps
+  taints:
+    - key: spotInstance
+      value: "true"
+      effect: NoSchedule
   requirements:
     - key: karpenter.sh/capacity-type
       operator: In
@@ -49,9 +53,9 @@ metadata:
   name: default
 spec:
   subnetSelector:
-    alpha.eksctl.io/cluster-name: ${CLUSTER_NAME}
+    alpha.eksctl.io/cluster-name: ${EKSCLUSTER_NAME}
   securityGroupSelector:
-    alpha.eksctl.io/cluster-name: ${CLUSTER_NAME}
+    alpha.eksctl.io/cluster-name: ${EKSCLUSTER_NAME}
   tags:
     KarpenerProvisionerName: "default"
     NodeType: "karpenter-workshop"

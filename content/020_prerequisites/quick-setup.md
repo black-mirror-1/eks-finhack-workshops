@@ -34,7 +34,7 @@ NOTE: All the steps from now on are run within Clou9 IDE
 Use the [GetCallerIdentity](https://docs.aws.amazon.com/cli/latest/reference/sts/get-caller-identity.html) CLI command to validate that the Cloud9 IDE is using the correct IAM role.
 
 ```bash
-aws sts get-caller-identity --query Arn | grep eksworkshop-admin -q && echo "IAM role valid" || echo "IAM role NOT valid"
+ws sts get-caller-identity --query Arn | grep eksworkshop-eksctl-C9Role -q && echo "IAM role valid" || echo "IAM role NOT valid"
 ```
 
 If the IAM role is not valid, <span style="color: red;">**DO NOT PROCEED**</span>. Manually attach the IAM role to the Cloud9 instance following the steps [here](/020_prerequisites/ec2instance.html).
@@ -62,28 +62,30 @@ Clone the git repository
 
 ```bash
 cd ~/environment
-git clone https://github.com/black-mirror-1/karpenter-for-emr-on-eks.git
-cd ~/environment/karpenter-for-emr-on-eks
+git clone https://github.com/black-mirror-1/eks-finhack-workshops.git
+cd ~/environment/eks-finhack-workshops
 ```
 
 Install cloud9 cli tools
 
 ```bash
-cd ~/environment/karpenter-for-emr-on-eks
+cd ~/environment/eks-finhack-workshops
 ./setup/c9-install-tools.sh
 ```
 
-## Create EKS and Karpenter infrastructure
+## Create EKS infrastructure
 
 ```bash
-cd ~/environment/karpenter-for-emr-on-eks
+cd ~/environment/eks-finhack-workshops
 ./setup/create-eks-infra.sh
 ```
 The script will do the following
 
 * Create an EKS Cluster with 2 On-Demand [Managed nodegroups](https://docs.aws.amazon.com/eks/latest/userguide/managed-node-groups.html) (one for control apps and another for the workloads). eksclt-config.yaml
+* Install [AWS Load Balancer Controller](https://docs.aws.amazon.com/eks/latest/userguide/aws-load-balancer-controller.html) add-on
 * Install and expose [Kube-ops-view](https://artifacthub.io/packages/helm/k8s-at-home/kube-ops-view) that can help visualize the resources in kubernetes cluster
 * Deploy the [Metrics Server](https://github.com/kubernetes-sigs/metrics-server), a cluster-wide aggregator of resource usage data. We will nees that when we are setting the autoscaling.
-* 
+* Install and expose [kubecost](https://www.kubecost.com/), an open source solution for cost management, which provides real time cost visibility and savings insights for Kubernetes
+
 
 

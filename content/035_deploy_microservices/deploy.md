@@ -6,13 +6,14 @@ weight: 37
 
 To deploy the application we just need to run:
 ```
-kubectl create namespace mcp-od-static
-kubectl apply -f ~/environment/mcp-od-static-service.yml 
+kubectl create namespace mcp-od-svc
+kubectl apply -f ~/environment/mcp-od-svc.yml 
 ```
 This should prompt:
 ```
-service/monte-carlo-pi-service created
-deployment.apps/monte-carlo-pi-service created
+service/mcp-od-svc created
+deployment.apps/mcp-od-svc created
+ingress.networking.k8s.io/mcp-od-svc-ingress created
 ```
 
 
@@ -20,7 +21,7 @@ deployment.apps/monte-carlo-pi-service created
 
 Once the application has been deployed we can use the following line to find out the external url to access the Monte Carlo Pi approximation service. To get the url of the service: 
 ```
-kubectl get svc monte-carlo-pi-service | tail -n 1 | awk '{ print "monte-carlo-pi-service URL = http://"$4 }'
+kubectl get ingress mcp-od-svc-ingress -n mcp-od-svc | tail -n 1 | awk '{ print "monte-carlo-pi-service URL = http://"$4 }'
 ```
 
 {{% notice note %}}

@@ -72,7 +72,7 @@ kubectl apply -f inflate-spot.yaml
 ## Challenge
 
 {{% notice tip %}}
-You can use **Kube-ops-view** or just plain **kubectl** cli to visualize the changes and answer the questions below. In the answers we will provide the CLI commands that will help you check the resposnes. Remember: to get the url of **kube-ops-view** you can run the following command `kubectl get svc kube-ops-view | tail -n 1 | awk '{ print "Kube-ops-view URL = http://"$4 }'`
+You can use **Kube-ops-view** or just plain **kubectl** cli to visualize the changes and answer the questions below. In the answers we will provide the CLI commands that will help you check the resposnes. Remember: to get the url of **kube-ops-view** you can run the following command `kubectl get ingress kube-ops-view-ingress | tail -n 1 | awk '{ print "Kube-ops-view URL = http://"$4 }'`
 {{% /notice %}}
 
 Answer the following questions. You can expand each question to get a detailed answer and validate your understanding.
@@ -148,6 +148,13 @@ kubectl scale deployment inflate-spot --replicas 0
 ```
 
 {{% /expand %}}
+
+
+## Cleanup
+Lets delete the inflate deployment before we proceed to deploy our microservice
+```
+kubectl delete -f inflate-spot.yaml
+```
 
 
 ## What Have we learned in this section : 

@@ -51,7 +51,7 @@ The results might differ if you created Cloud9 in any other region than the five
 {{% /notice %}}
 
 ```
-ec2-instance-selector --vcpus 4 --memory 16 --gpus 0 --current-generation -a x86_64 --deny-list '.*[ni].*'   
+ec2-instance-selector --vcpus 4 --memory 8 --gpus 0 --current-generation -a x86_64 --deny-list '.*[ni].*'   
 ```
 
 This should display a list like the one that follows . We will use this instances as part of one of our node groups.
@@ -59,21 +59,18 @@ This should display a list like the one that follows . We will use this instance
 
 
 ```
-m4.xlarge
-m5.xlarge
-m5a.xlarge
-m5ad.xlarge
-m5d.xlarge
-t2.xlarge
-t3.xlarge
-t3a.xlarge
+c5.xlarge
+c5a.xlarge
+c5ad.xlarge
+c5d.xlarge
+c6a.xlarge
 ```
 
 Internally ec2-instance-selector is making calls to the [DescribeInstanceTypes](https://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeInstanceTypes.html) for the specific region and filtering the instances based on the criteria selected in the command line, in our case we did filter for instances that meet the following criteria:
  
  * Instances with no GPUs
  * of x86_64 Architecture (no ARM instances like A1 or m6g instances for example)
- * Instances that have 4 vCPUs and 16 GB of RAM
+ * Instances that have 4 vCPUs and 8 GB of RAM
  * Instances of current generation (4th gen onwards)
  * Instances that don’t meet the regular expression .*[in].*, so effectively latest generation Intel instances and improved network throughput instances. The main reason to discard those in this workshop is that some of those might not be available (at the time of writing this workshop) on all the regions. You can check the availability using instance selector and add them yourselve as an exercise.
 
@@ -87,30 +84,4 @@ You are encouraged to test what are the options that `ec2-instance-selector` pro
 For example, try running the same commands as you did before with the extra parameters, like **`--output table-wide`** for a tabular view.
 {{% /notice %}}
 
-### Challenge 
-
-Find out another group that adheres to a 1 vCPU:4 GB ratio, this time using instances with 8 vCPUs and 32 GB of RAM.
-
-{{%expand "Expand this for an example on the list of instances" %}}
-
-That should be easy. You can run the command:  
-
-```
-ec2-instance-selector --vcpus 8 --memory 32 --gpus 0 --current-generation -a x86_64 --deny-list '.*[nih].*'  
-```
-
-which should yield a list as follows 
-
-```
-m4.2xlarge
-m5.2xlarge
-m5a.2xlarge
-m5ad.2xlarge
-m5d.2xlarge
-t2.2xlarge
-t3.2xlarge
-t3a.2xlarge
-```
-
-{{% /expand %}}
 

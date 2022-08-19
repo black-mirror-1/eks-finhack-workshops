@@ -3,6 +3,7 @@ title: "Deploying Multiple Provisioners"
 date: 2021-11-07T11:05:19-07:00
 weight: 86
 draft: false
+hidden: true
 ---
 
 In the previous sections, we did set up a default Provisioner and did scale a simple application. We did learn also about a few best practices when using Spot and how Karpenter simplifies the application of implementing Spot best practices. The tests that we did were however relatively simple. In the next sections we will extend the previous scenario and cover more concepts relevant to Karpenter Provisioner such as: 

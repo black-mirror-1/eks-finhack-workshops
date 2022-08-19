@@ -12,38 +12,43 @@ Let's create a template configuration file for monte carlo pi application:
 
 ```
 cd ~/environment
-cat <<EoF > monte-carlo-pi-service.yaml
+cat <<EoF > ~/environment/mcp-spot-karpenter.yml
 ---
 apiVersion: v1 
 kind: Service 
 metadata: 
-  name: monte-carlo-pi-service
-  namespace: mcp-spot-karpneter
+  name: mcp-spot-karpenter
+  namespace: mcp-spot-karpenter 
 spec: 
-  type: LoadBalancer 
+  type: ClusterIP 
   ports: 
-    - port: 80 
+    - port: 8080
       targetPort: 8080 
   selector: 
-    app: monte-carlo-pi-service 
+    app: mcp-spot-karpenter 
 --- 
 apiVersion: apps/v1 
 kind: Deployment 
 metadata: 
-  name: monte-carlo-pi-service
-  namespace: mcp-spot-karpneter 
+  name: mcp-spot-karpenter
+  namespace: mcp-spot-karpenter 
   labels: 
-    app: monte-carlo-pi-service 
+    app: mcp-spot-karpenter 
 spec: 
-  replicas: 2 
+  replicas: 6 
   selector: 
     matchLabels: 
-      app: monte-carlo-pi-service 
+      app: mcp-spot-karpenter 
   template: 
     metadata: 
       labels: 
-        app: monte-carlo-pi-service 
+        app: mcp-spot-karpenter 
     spec:
+      tolerations: 
+      - key: "spotInstance" 
+        operator: "Equal" 
+        value: "true" 
+        effect: "NoSchedule" 
       nodeSelector:
         intent: apps
         kubernetes.io/arch: amd64
@@ -53,10 +58,10 @@ spec:
           image: ruecarlo/monte-carlo-pi-service
           resources: 
             requests: 
-              memory: "512Mi" 
+              memory: "2048Mi" 
               cpu: "1024m" 
             limits: 
-              memory: "512Mi" 
+              memory: "2048Mi" 
               cpu: "1024m" 
           securityContext: 
             privileged: false 
@@ -64,13 +69,34 @@ spec:
             allowPrivilegeEscalation: false 
           ports: 
             - containerPort: 8080 
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: mcp-spot-karpenter-ingress
+  namespace: mcp-spot-karpenter
+  annotations:
+    alb.ingress.kubernetes.io/scheme: internet-facing 
+    alb.ingress.kubernetes.io/target-type: ip 
+spec:
+  ingressClassName: alb 
+  rules:
+  - http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: mcp-spot-karpenter
+            port:
+               number: 8080
 EoF
 
-kebctl create namespace mcp-spot-karpneter
-kubectl apply -f monte-carlo-pi-service.yaml
+kubectl create namespace mcp-spot-karpenter
+kubectl apply -f mcp-spot-karpenter.yml
 ```
 
-This should create a `monte-carlo-pi-service.yml` template file that defines a **Service** and a **Deployment**. The configuration instructs the cluster to deploy two replicas of a pod with a single container, that sets up [Resource request and limits](https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/#resource-requests-and-limits-of-pod-and-container) to a fixed value ~0.5vCPUs and 1024Mi of RAM.
+This should create a `mcp-spot-karpenter.yml` template file that defines a **Service** and a **Deployment**. The configuration instructs the cluster to deploy two replicas of a pod with a single container, that sets up [Resource request and limits](https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/#resource-requests-and-limits-of-pod-and-container) to a fixed value ~0.5vCPUs and 1024Mi of RAM.
 
 Let's understand what happens when applying this configuration.
 
@@ -126,7 +152,7 @@ kubectl describe node $(kubectl get node --selector=intent=apps,karpenter.sh/cap
 So far we have not exposed any service outside the **kube-ops-view**. Similar to what we did with **kube-ops-view**. Once the application has been deployed we can use the following line to find out the external url to access the Monte Carlo Pi approximation service. To get the url of the service: 
 
 ```
-kubectl get svc monte-carlo-pi-service -n mcp-spot-karpenter | tail -n 1 | awk '{ print "monte-carlo-pi-service URL = http://"$4 }'
+kubectl get ingress mcp-spot-karpenter-ingress -n mcp-spot-karpenter | tail -n 1 | awk '{ print "mcp-spot-karpenter service URL = http://"$4 }'
 ```
 
 {{% notice note %}}

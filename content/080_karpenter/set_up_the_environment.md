@@ -9,7 +9,7 @@ Before we install Karpenter, there are a few things that we will need to prepare
 
 ## Create the IAM Role and Instance profile for Karpenter Nodes 
 
-Instances launched by Karpenter must run with an InstanceProfile that grants permissions necessary to run containers and configure networking. Karpenter discovers the InstanceProfile using the name `KarpenterNodeRole-${ClusterName}`.
+Instances launched by Karpenter must run with an InstanceProfile that grants permissions necessary to run containers and configure networking. Karpenter discovers the InstanceProfile using the name `KarpenterNodeRole-${EKSClusterName}`.
 
 ```
 export KARPENTER_VERSION=v0.13.1
@@ -17,10 +17,10 @@ echo "export KARPENTER_VERSION=${KARPENTER_VERSION}" >> ~/.bash_profile
 TEMPOUT=$(mktemp)
 curl -fsSL https://karpenter.sh/"${KARPENTER_VERSION}"/getting-started/getting-started-with-eksctl/cloudformation.yaml > $TEMPOUT \
 && aws cloudformation deploy \
-  --stack-name Karpenter-${CLUSTER_NAME} \
+  --stack-name Karpenter-${EKSCLUSTER_NAME} \
   --template-file ${TEMPOUT} \
   --capabilities CAPABILITY_NAMED_IAM \
-  --parameter-overrides ClusterName=${CLUSTER_NAME}
+  --parameter-overrides ClusterName=${EKSCLUSTER_NAME}
 ```
 
 {{% notice tip %}}
@@ -32,8 +32,8 @@ Second, grant access to instances using the profile to connect to the cluster. T
 ```
 eksctl create iamidentitymapping \
   --username system:node:{{EC2PrivateDNSName}} \
-  --cluster  ${CLUSTER_NAME} \
-  --arn arn:aws:iam::${AWS_ACCOUNT_ID}:role/KarpenterNodeRole-${CLUSTER_NAME} \
+  --cluster  ${EKSCLUSTER_NAME} \
+  --arn arn:aws:iam::${ACCOUNTID}:role/KarpenterNodeRole-${EKSCLUSTER_NAME} \
   --group system:bootstrappers \
   --group system:nodes
 ```
@@ -46,19 +46,13 @@ kubectl describe configmap -n kube-system aws-auth
 
 ## Create KarpenterController IAM Role
 
-Before adding the IAM Role for the service account we need to create the IAM OIDC Identity Provider for the cluster. 
-
-```
-eksctl utils associate-iam-oidc-provider --cluster ${CLUSTER_NAME} --approve
-```
-
 Karpenter requires permissions like launching instances. This will create an AWS IAM Role, Kubernetes service account, and associate them using [IAM Roles for Service Accounts (IRSA)](https://docs.aws.amazon.com/emr/latest/EMR-on-EKS-DevelopmentGuide/setting-up-enable-IAM.html)
 
 ```
 eksctl create iamserviceaccount \
-  --cluster $CLUSTER_NAME --name karpenter --namespace karpenter \
-  --role-name "${CLUSTER_NAME}-karpenter" \
-  --attach-policy-arn arn:aws:iam::$AWS_ACCOUNT_ID:policy/KarpenterControllerPolicy-$CLUSTER_NAME \
+  --cluster $EKSCLUSTER_NAME --name karpenter --namespace karpenter \
+  --role-name "${EKSCLUSTER_NAME}-karpenter" \
+  --attach-policy-arn arn:aws:iam::$ACCOUNTID:policy/KarpenterControllerPolicy-$EKSCLUSTER_NAME \
   --role-only \
   --approve
 ```

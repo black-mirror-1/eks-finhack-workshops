@@ -12,8 +12,8 @@ In this section we will install Karpenter and learn how to configure a default [
 We will use helm to deploy Karpenter to the cluster. 
 
 ```
-export KARPENTER_IAM_ROLE_ARN="arn:aws:iam::${AWS_ACCOUNT_ID}:role/${CLUSTER_NAME}-karpenter"
-export CLUSTER_ENDPOINT="$(aws eks describe-cluster --name ${CLUSTER_NAME} --query "cluster.endpoint" --output text)"
+export KARPENTER_IAM_ROLE_ARN="arn:aws:iam::${ACCOUNTID}:role/${EKSCLUSTER_NAME}-karpenter"
+export CLUSTER_ENDPOINT="$(aws eks describe-cluster --name ${EKSCLUSTER_NAME} --query "cluster.endpoint" --output text)"
 echo "export KARPENTER_IAM_ROLE_ARN=${KARPENTER_IAM_ROLE_ARN}" >> ~/.bash_profile
 echo "export CLUSTER_ENDPOINT=${CLUSTER_ENDPOINT}" >> ~/.bash_profile
 helm repo add karpenter https://charts.karpenter.sh
@@ -22,23 +22,23 @@ helm upgrade --install --namespace karpenter --create-namespace \
   karpenter karpenter/karpenter \
   --version ${KARPENTER_VERSION}\
   --set serviceAccount.annotations."eks\.amazonaws\.com/role-arn"=${KARPENTER_IAM_ROLE_ARN} \
-  --set clusterName=${CLUSTER_NAME} \
+  --set clusterName=${EKSCLUSTER_NAME} \
   --set clusterEndpoint=${CLUSTER_ENDPOINT} \
   --set nodeSelector.intent=control-apps \
   --set defaultProvisioner.create=false \
-  --set aws.defaultInstanceProfile=KarpenterNodeInstanceProfile-${CLUSTER_NAME} \
+  --set aws.defaultInstanceProfile=KarpenterNodeInstanceProfile-${EKSCLUSTER_NAME} \
   --wait
 ```
 
 The command above:
 
-* uses the both the **CLUSTER_NAME** and the **CLUSTER_ENDPOINT** so that Karpenter controller can contact the Cluster API Server.
+* uses the both the **EKSCLUSTER_NAME** and the **CLUSTER_ENDPOINT** so that Karpenter controller can contact the Cluster API Server.
 
 * uses the `--set defaultProvisioner.create=false`. We will set a default Provisioner configuration in the next section. This will help us understand Karpenter Provisioners.
 
 * uses the argument `--set nodeSelector.intent=control-apps` to deploy the controllers in the On-Demand managed node group that was created with the cluster.
 
-* uses the argument `--set aws.defaultInstanceProfile=KarpenterNodeInstanceProfile-${CLUSTER_NAME}` to use the instance profile we created before to grant permissions necessary to instances to run containers and configure networking.
+* uses the argument `--set aws.defaultInstanceProfile=KarpenterNodeInstanceProfile-${EKSCLUSTER_NAME}` to use the instance profile we created before to grant permissions necessary to instances to run containers and configure networking.
 
 * Karpenter configuration is provided through a Custom Resource Definition. We will be learning about providers in the next section, the `--wait` notifies the webhook controller to wait until the Provisioner CRD has been deployed.
 

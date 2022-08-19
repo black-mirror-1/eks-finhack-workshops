@@ -4,7 +4,7 @@ chapter: true
 weight: 60
 ---
 
-# Modify example Microservice to deploy on Spot
+# Deploy example Microservice on Spot
 
 There are two requirements that we should apply and implement in the configuration file:
 
